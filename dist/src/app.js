@@ -84,3 +84,12 @@ exports.app.post('/videos', (req, res) => {
     videos.push(newVideo);
     res.status(201).send(newVideo);
 });
+exports.app.delete('/videos/:id', (req, res) => {
+    const foundedVideo = videos.find(v => v.id === +req.params.id);
+    if (!foundedVideo) {
+        res.sendStatus(404);
+        return;
+    }
+    videos = videos.filter(v => v.id !== foundedVideo.id);
+    res.send(videos);
+});
