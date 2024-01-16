@@ -24,18 +24,14 @@ let videos: VideoType[] = [
 
 
 app.get('/', (req: Request, res: Response) => {
-    console.log(res)
     res.send("Hello").status(200)
 })
 
 
-
 app.get('/videos', (req: Request, res: Response) => {
-    console.log(res)
     res.send(videos)
 
 })
-
 
 
 app.get('/videos/:id', (req: Request<Param>, res: Response) => {
