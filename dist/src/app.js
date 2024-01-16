@@ -30,7 +30,7 @@ exports.app.get('/videos', (req, res) => {
 });
 exports.app.delete('/testing/all-data', (req, res) => {
     videos = [];
-    res.send(videos).status(204);
+    res.sendStatus(204);
 });
 exports.app.get('/videos/:id', (req, res) => {
     const foundedVideo = videos.find(v => v.id === +req.params.id);

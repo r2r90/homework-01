@@ -35,7 +35,7 @@ app.get('/videos', (req: Request, res: Response) => {
 
 app.delete('/testing/all-data', (req: Request, res: Response) => {
     videos = []
-    res.send(videos).status(204)
+    res.sendStatus(204)
 })
 
 
