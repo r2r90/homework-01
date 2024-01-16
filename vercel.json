@@ -3,7 +3,7 @@
   "name": "videos-crud",
   "builds": [
     {
-      "src": "app.js",
+      "src": "src/index.ts",
       "use": "@vercel/node"
     }
   ],
