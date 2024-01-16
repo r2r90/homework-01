@@ -39,7 +39,6 @@ app.delete('/testing/all-data', (req: Request, res: Response) => {
 })
 
 
-
 app.get('/videos/:id', (req: Request<Param>, res: Response) => {
 
     const foundedVideo = videos.find(v => v.id === +req.params.id)
@@ -60,7 +59,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     const titleLength = title.trim().length
     const authorLength = author.trim().length
 
-    if (!title || typeof title !== 'string' || titleLength > 40 ) {
+    if (!title || typeof title !== 'string' || titleLength > 40) {
         errors.errorMessages.push({message: 'Incorrect title!', field: title})
     }
 
@@ -104,4 +103,14 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     res.status(201).send(newVideo)
 
 
+})
+app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
+
+    const foundedVideo = videos.find(v => v.id === +req.params.id)
+    if (!foundedVideo) {
+        res.sendStatus(404)
+        return
+    }
+    videos = videos.filter(v => v !== foundedVideo)
+    res.send(videos)
 })
