@@ -33,6 +33,12 @@ app.get('/videos', (req: Request, res: Response) => {
 
 })
 
+app.delete('/testing/all-data', (req: Request, res: Response) => {
+    videos = []
+    res.send(videos).status(204)
+})
+
+
 
 app.get('/videos/:id', (req: Request<Param>, res: Response) => {
 
@@ -44,7 +50,7 @@ app.get('/videos/:id', (req: Request<Param>, res: Response) => {
     res.send(foundedVideo)
 })
 
-app.post('videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
+app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     const errors: ErrorType = {
         errorMessages: []
     }
@@ -54,11 +60,11 @@ app.post('videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     const titleLength = title.trim().length
     const authorLength = author.trim().length
 
-    if (!title || typeof title !== 'string' || titleLength > 40 || titleLength < 20) {
+    if (!title || typeof title !== 'string' || titleLength > 40 ) {
         errors.errorMessages.push({message: 'Incorrect title!', field: title})
     }
 
-    if (!title || typeof author !== 'string' || authorLength > 40 || authorLength < 20) {
+    if (!title || typeof author !== 'string' || authorLength > 40) {
         errors.errorMessages.push({message: 'Incorrect author!', field: author})
     }
 
@@ -98,8 +104,4 @@ app.post('videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     res.status(201).send(newVideo)
 
 
-})
-app.delete('/testing/all-data', (req: Request, res: Response) => {
-    videos = []
-    res.status(204)
 })

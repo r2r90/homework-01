@@ -28,6 +28,10 @@ exports.app.get('/', (req, res) => {
 exports.app.get('/videos', (req, res) => {
     res.send(videos);
 });
+exports.app.delete('/testing/all-data', (req, res) => {
+    videos = [];
+    res.send(videos).status(204);
+});
 exports.app.get('/videos/:id', (req, res) => {
     const foundedVideo = videos.find(v => v.id === +req.params.id);
     if (!foundedVideo) {
@@ -36,17 +40,17 @@ exports.app.get('/videos/:id', (req, res) => {
     }
     res.send(foundedVideo);
 });
-exports.app.post('videos', (req, res) => {
+exports.app.post('/videos', (req, res) => {
     const errors = {
         errorMessages: []
     };
     let { title, author, availableResolutions } = req.body;
     const titleLength = title.trim().length;
     const authorLength = author.trim().length;
-    if (!title || typeof title !== 'string' || titleLength > 40 || titleLength < 20) {
+    if (!title || typeof title !== 'string' || titleLength > 40) {
         errors.errorMessages.push({ message: 'Incorrect title!', field: title });
     }
-    if (!title || typeof author !== 'string' || authorLength > 40 || authorLength < 20) {
+    if (!title || typeof author !== 'string' || authorLength > 40) {
         errors.errorMessages.push({ message: 'Incorrect author!', field: author });
     }
     if (Array.isArray(availableResolutions)) {
@@ -79,8 +83,4 @@ exports.app.post('videos', (req, res) => {
     };
     videos.push(newVideo);
     res.status(201).send(newVideo);
-});
-exports.app.delete('/testing/all-data', (req, res) => {
-    videos = [];
-    res.status(204);
 });
