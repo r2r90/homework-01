@@ -50,7 +50,7 @@ exports.app.post('/videos', (req, res) => {
     if (!title || typeof title !== 'string' || titleLength > 40) {
         errors.errorMessages.push({ message: 'Incorrect title!', field: title });
     }
-    if (!title || typeof author !== 'string' || authorLength > 40) {
+    if (!title || typeof author !== 'string' || authorLength > 20) {
         errors.errorMessages.push({ message: 'Incorrect author!', field: author });
     }
     if (Array.isArray(availableResolutions)) {
@@ -91,5 +91,13 @@ exports.app.delete('/videos/:id', (req, res) => {
         return;
     }
     videos = videos.filter(v => v.id !== foundedVideo.id);
+    res.send(videos);
+});
+exports.app.put('/videos/:id', (req, res) => {
+    const foundedVideo = videos.find(v => v.id === +req.params.id);
+    if (!foundedVideo) {
+        res.sendStatus(404);
+        return;
+    }
     res.send(videos);
 });

@@ -63,7 +63,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         errors.errorMessages.push({message: 'Incorrect title!', field: title})
     }
 
-    if (!title || typeof author !== 'string' || authorLength > 40) {
+    if (!title || typeof author !== 'string' || authorLength > 20) {
         errors.errorMessages.push({message: 'Incorrect author!', field: author})
     }
 
@@ -112,5 +112,20 @@ app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
         return
     }
     videos = videos.filter(v => v.id !== foundedVideo.id)
+    res.send(videos)
+})
+
+
+app.put('/videos/:id', (req: Request<Param>, res: Response) => {
+
+    const foundedVideo = videos.find(v => v.id === +req.params.id)
+    if (!foundedVideo) {
+        res.sendStatus(404)
+        return
+    }
+
+
+
+
     res.send(videos)
 })
