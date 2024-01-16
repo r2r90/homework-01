@@ -7,7 +7,7 @@ app.use(express.json())
 
 export const AvailableResolutions = ['P144', 'P240', 'P360', 'P480', 'P720', 'P1080', 'P1440', 'P2160']
 
-let videos: VideoType[]  = [
+let videos: VideoType[] = [
     {
         "id": 0,
         "title": "string",
@@ -22,14 +22,20 @@ let videos: VideoType[]  = [
     }
 ]
 
+
 app.get('/', (req: Request, res: Response) => {
-    res.send("Hello")
+    console.log(res)
+    res.send("Hello").status(200)
 })
+
 
 
 app.get('/videos', (req: Request, res: Response) => {
+    console.log(res)
     res.send(videos)
+
 })
+
 
 
 app.get('/videos/:id', (req: Request<Param>, res: Response) => {
