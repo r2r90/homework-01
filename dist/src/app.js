@@ -22,6 +22,9 @@ let videos = [
         ]
     }
 ];
+exports.app.get('/', (req, res) => {
+    res.send("Hello");
+});
 exports.app.get('/videos', (req, res) => {
     res.send(videos);
 });
