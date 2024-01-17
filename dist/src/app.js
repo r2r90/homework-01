@@ -91,7 +91,7 @@ exports.app.delete('/videos/:id', (req, res) => {
         return;
     }
     videos = videos.filter(v => v.id !== foundedVideo.id);
-    res.send(videos);
+    res.send(videos).sendStatus(204);
 });
 exports.app.put('/videos/:id', (req, res) => {
     const foundedVideo = videos.find(v => v.id === +req.params.id);

@@ -112,7 +112,7 @@ app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
         return
     }
     videos = videos.filter(v => v.id !== foundedVideo.id)
-    res.send(videos)
+    res.send(videos).sendStatus(204)
 })
 
 
@@ -123,9 +123,5 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
         res.sendStatus(404)
         return
     }
-
-
-
-
     res.send(videos)
 })
