@@ -71,12 +71,15 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
 
     if (!title || typeof title !== 'string' || title.trim().length > 40) {
-        errors.errorMessages.push({message: 'Incorrect title!', field: title})
+        errors.errorMessages.push({message: 'Incorrect title!', field: 'title'})
+
     }
 
-    if (!title || typeof author !== 'string' ||  author.trim() > 20) {
-        errors.errorMessages.push({message: 'Incorrect author!', field: author})
+    if (!author || typeof author !== 'string' || author.trim().length > 20) {
+        errors.errorMessages.push({message: 'Incorrect author!', field: 'author'})
     }
+
+    console.log(errors)
 
     if (Array.isArray(availableResolutions)) {
         availableResolutions.forEach(r => {
