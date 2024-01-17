@@ -131,7 +131,7 @@ exports.app.put('/videos/:id', (req, res) => {
             const dateObject = new Date(dateString);
             return !isNaN(dateObject.getTime());
         };
-        if (publicationDate !== undefined && !isValidDate(publicationDate)) {
+        if (publicationDate !== undefined && typeof publicationDate !== 'string' || !isValidDate(publicationDate)) {
             putErrors.errorsMessages.push({ message: 'Incorrect publicationDate', field: 'publicationDate' });
         }
         if (putErrors.errorsMessages.length) {

@@ -169,7 +169,7 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
             return !isNaN(dateObject.getTime());
         }
 
-        if (publicationDate !== undefined && !isValidDate(publicationDate)) {
+        if (publicationDate !== undefined && typeof publicationDate !== 'string' || !isValidDate(publicationDate)) {
             putErrors.errorsMessages.push({message: 'Incorrect publicationDate', field: 'publicationDate'});
         }
 
