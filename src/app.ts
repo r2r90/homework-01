@@ -22,10 +22,6 @@ let videos: VideoType[] = [
     }
 ]
 
-const errors: ErrorType = {
-    errorsMessages: []
-}
-
 
 app.get('/', (req: Request, res: Response) => {
     res.send("Hello").status(200)
@@ -66,24 +62,30 @@ app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
 })
 
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
+    const postErrors: ErrorType = {
+        errorsMessages: []
+    }
+
 
 
     let {title, author, availableResolutions} = req.body
 
 
     if (!title || typeof title !== 'string' || title.trim().length > 40) {
-        errors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
+
+        postErrors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
+        console.log(postErrors.errorsMessages)
 
     }
 
     if (!author || typeof author !== 'string' || author.trim().length > 20) {
-        errors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
+        postErrors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
     }
 
     if (Array.isArray(availableResolutions)) {
         availableResolutions.forEach(r => {
             if (!AvailableResolutions.includes(r)) {
-                errors.errorsMessages.push({message: 'Incorrect resolution', field: 'availableResolutions'})
+                postErrors.errorsMessages.push({message: 'Incorrect resolution', field: 'availableResolutions'})
                 return
             }
         })
@@ -91,8 +93,8 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         availableResolutions = []
     }
 
-    if (errors.errorsMessages.length) {
-        res.status(400).send(errors)
+    if (postErrors.errorsMessages.length) {
+        res.status(400).send(postErrors)
         return
     }
 
@@ -121,7 +123,9 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
 app.put('/videos/:id', (req: Request<Param>, res: Response) => {
 
-
+    const putErrors: ErrorType = {
+        errorsMessages: []
+    }
     const foundedVideo = videos.find(v => v.id === +req.params.id)
     if (!foundedVideo) {
         res.sendStatus(404)
@@ -133,20 +137,20 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
 
 
         if (!title || typeof title !== 'string' || title.trim().length > 40) {
-            errors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
+            putErrors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
 
         }
 
         if (!author || typeof author !== 'string' || author.trim().length > 20) {
-            errors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
+            putErrors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
         }
 
         if (typeof canBeDownloaded !== 'boolean') {
-            errors.errorsMessages.push({message: 'Incorrect can be downloaded!', field: 'canBeDownloaded'})
+            putErrors.errorsMessages.push({message: 'Incorrect can be downloaded!', field: 'canBeDownloaded'})
         }
 
         if (typeof minAgeRestriction !== 'number') {
-            errors.errorsMessages.push({message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction'})
+            putErrors.errorsMessages.push({message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction'})
         }
 
 
