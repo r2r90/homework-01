@@ -80,6 +80,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         postErrors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
     }
 
+
     if (Array.isArray(availableResolutions)) {
         availableResolutions.forEach(r => {
             if (!AvailableResolutions.includes(r)) {
@@ -90,6 +91,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     } else {
         availableResolutions = []
     }
+
 
     if (postErrors.errorsMessages.length) {
         res.status(400).send(postErrors)
@@ -131,7 +133,7 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
     } else {
 
 
-        let {title, author, availableResolutions, canBeDownloaded, minAgeRestriction} = req.body
+        let {title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate} = req.body
 
         if (Array.isArray(availableResolutions)) {
             const validResolutions = availableResolutions.every(r => AvailableResolutions.includes(r));
@@ -162,17 +164,28 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
             putErrors.errorsMessages.push({message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction'})
         }
 
+        const isValidDate = (dateString: string) => {
+            const dateObject = new Date(dateString);
+            return !isNaN(dateObject.getTime());
+        }
+
+        if (publicationDate !== undefined && !isValidDate(publicationDate)) {
+            putErrors.errorsMessages.push({message: 'Incorrect publicationDate', field: 'publicationDate'});
+        }
+
 
         if (putErrors.errorsMessages.length) {
             res.status(400).send(putErrors)
             return
         }
 
+
         foundedVideo.title = title
         foundedVideo.author = author
         foundedVideo.availableResolutions = availableResolutions
         foundedVideo.canBeDownloaded = canBeDownloaded
         foundedVideo.minAgeRestriction = minAgeRestriction
+        foundedVideo.publicationDate = publicationDate
 
 
         res.status(204).send(foundedVideo)

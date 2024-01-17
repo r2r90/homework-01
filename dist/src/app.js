@@ -102,7 +102,7 @@ exports.app.put('/videos/:id', (req, res) => {
         return;
     }
     else {
-        let { title, author, availableResolutions, canBeDownloaded, minAgeRestriction } = req.body;
+        let { title, author, availableResolutions, canBeDownloaded, minAgeRestriction, publicationDate } = req.body;
         if (Array.isArray(availableResolutions)) {
             const validResolutions = availableResolutions.every(r => exports.AvailableResolutions.includes(r));
             if (!validResolutions) {
@@ -127,6 +127,13 @@ exports.app.put('/videos/:id', (req, res) => {
         if (minAgeRestriction && typeof minAgeRestriction !== 'number' || minAgeRestriction > 18 || minAgeRestriction < 0) {
             putErrors.errorsMessages.push({ message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction' });
         }
+        const isValidDate = (dateString) => {
+            const dateObject = new Date(dateString);
+            return !isNaN(dateObject.getTime());
+        };
+        if (publicationDate !== undefined && !isValidDate(publicationDate)) {
+            putErrors.errorsMessages.push({ message: 'Incorrect publicationDate', field: 'publicationDate' });
+        }
         if (putErrors.errorsMessages.length) {
             res.status(400).send(putErrors);
             return;
@@ -136,6 +143,7 @@ exports.app.put('/videos/:id', (req, res) => {
         foundedVideo.availableResolutions = availableResolutions;
         foundedVideo.canBeDownloaded = canBeDownloaded;
         foundedVideo.minAgeRestriction = minAgeRestriction;
+        foundedVideo.publicationDate = publicationDate;
         res.status(204).send(foundedVideo);
     }
 });
