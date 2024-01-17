@@ -22,6 +22,9 @@ let videos = [
         ]
     }
 ];
+const errors = {
+    errorsMessages: []
+};
 exports.app.get('/', (req, res) => {
     res.send("Hello").status(200);
 });
@@ -51,9 +54,6 @@ exports.app.delete('/videos/:id', (req, res) => {
     res.sendStatus(204).send("Video Deleted");
 });
 exports.app.post('/videos', (req, res) => {
-    const errors = {
-        errorsMessages: []
-    };
     let { title, author, availableResolutions } = req.body;
     if (!title || typeof title !== 'string' || title.trim().length > 40) {
         errors.errorsMessages.push({ message: 'Incorrect title!', field: 'title' });
@@ -61,7 +61,6 @@ exports.app.post('/videos', (req, res) => {
     if (!author || typeof author !== 'string' || author.trim().length > 20) {
         errors.errorsMessages.push({ message: 'Incorrect author!', field: 'author' });
     }
-    console.log(errors);
     if (Array.isArray(availableResolutions)) {
         availableResolutions.forEach(r => {
             if (!exports.AvailableResolutions.includes(r)) {
@@ -99,5 +98,35 @@ exports.app.put('/videos/:id', (req, res) => {
         res.sendStatus(404);
         return;
     }
-    res.send(videos);
+    else {
+        let { title, author, availableResolutions, canBeDownloaded, minAgeRestriction } = req.body;
+        if (!title || typeof title !== 'string' || title.trim().length > 40) {
+            errors.errorsMessages.push({ message: 'Incorrect title!', field: 'title' });
+        }
+        if (!author || typeof author !== 'string' || author.trim().length > 20) {
+            errors.errorsMessages.push({ message: 'Incorrect author!', field: 'author' });
+        }
+        if (typeof canBeDownloaded !== 'boolean') {
+            errors.errorsMessages.push({ message: 'Incorrect can be downloaded!', field: 'canBeDownloaded' });
+        }
+        if (typeof minAgeRestriction !== 'number') {
+            errors.errorsMessages.push({ message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction' });
+        }
+        foundedVideo.title = req.body.title;
+        foundedVideo.author = req.body.author;
+        foundedVideo.canBeDownloaded = req.body.canBeDownloaded;
+        foundedVideo.minAgeRestriction = req.body.minAgeRestriction;
+        if (Array.isArray(availableResolutions)) {
+            availableResolutions.forEach(r => {
+                if (!exports.AvailableResolutions.includes(r)) {
+                    errors.errorsMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
+                    return;
+                }
+            });
+        }
+        else {
+            foundedVideo.availableResolutions = req.body.availableResolutions;
+        }
+        res.send(foundedVideo);
+    }
 });
