@@ -49,6 +49,18 @@ app.get('/videos/:id', (req: Request<Param>, res: Response) => {
     res.send(foundedVideo)
 })
 
+app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
+    const foundedVideo = videos.find(v => v.id === +req.params.id)
+    if (!foundedVideo) {
+        res.sendStatus(404)
+        return
+    }
+
+    videos = videos.filter(v => v.id !== foundedVideo.id)
+    console.log(videos)
+    res.sendStatus(204).send("Video Deleted")
+})
+
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     const errors: ErrorType = {
         errorMessages: []
@@ -56,14 +68,13 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
     let {title, author, availableResolutions} = req.body
 
-    const titleLength = title.trim().length
-    const authorLength = author.trim().length
 
-    if (!title || typeof title !== 'string' || titleLength > 40) {
+
+    if (!title || typeof title !== 'string' || title.trim().length > 40) {
         errors.errorMessages.push({message: 'Incorrect title!', field: title})
     }
 
-    if (!title || typeof author !== 'string' || authorLength > 20) {
+    if (!title || typeof author !== 'string' ||  author.trim() > 20) {
         errors.errorMessages.push({message: 'Incorrect author!', field: author})
     }
 
@@ -103,19 +114,6 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     res.status(201).send(newVideo)
 
 
-})
-app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
-
-
-    const foundedVideo = videos.find(v => v.id === +req.params.id)
-    if (!foundedVideo) {
-        res.sendStatus(404)
-        return
-    }
-
-   videos = videos.filter(v => v.id !== foundedVideo.id)
-    console.log(videos)
-    res.sendStatus(204).send("Video Deleted")
 })
 
 

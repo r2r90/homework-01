@@ -40,17 +40,25 @@ exports.app.get('/videos/:id', (req, res) => {
     }
     res.send(foundedVideo);
 });
+exports.app.delete('/videos/:id', (req, res) => {
+    const foundedVideo = videos.find(v => v.id === +req.params.id);
+    if (!foundedVideo) {
+        res.sendStatus(404);
+        return;
+    }
+    videos = videos.filter(v => v.id !== foundedVideo.id);
+    console.log(videos);
+    res.sendStatus(204).send("Video Deleted");
+});
 exports.app.post('/videos', (req, res) => {
     const errors = {
         errorMessages: []
     };
     let { title, author, availableResolutions } = req.body;
-    const titleLength = title.trim().length;
-    const authorLength = author.trim().length;
-    if (!title || typeof title !== 'string' || titleLength > 40) {
+    if (!title || typeof title !== 'string' || title.trim().length > 40) {
         errors.errorMessages.push({ message: 'Incorrect title!', field: title });
     }
-    if (!title || typeof author !== 'string' || authorLength > 20) {
+    if (!title || typeof author !== 'string' || author.trim() > 20) {
         errors.errorMessages.push({ message: 'Incorrect author!', field: author });
     }
     if (Array.isArray(availableResolutions)) {
@@ -83,16 +91,6 @@ exports.app.post('/videos', (req, res) => {
     };
     videos.push(newVideo);
     res.status(201).send(newVideo);
-});
-exports.app.delete('/videos/:id', (req, res) => {
-    const foundedVideo = videos.find(v => v.id === +req.params.id);
-    if (!foundedVideo) {
-        res.sendStatus(404);
-        return;
-    }
-    videos = videos.filter(v => v.id !== foundedVideo.id);
-    console.log(videos);
-    res.sendStatus(204).send("Video Deleted");
 });
 exports.app.put('/videos/:id', (req, res) => {
     const foundedVideo = videos.find(v => v.id === +req.params.id);
