@@ -106,13 +106,16 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 })
 app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
 
+
     const foundedVideo = videos.find(v => v.id === +req.params.id)
     if (!foundedVideo) {
         res.sendStatus(404)
         return
     }
-    videos = videos.filter(v => v.id !== foundedVideo.id)
-    res.send(videos).sendStatus(204)
+
+   videos = videos.filter(v => v.id !== foundedVideo.id)
+    console.log(videos)
+    res.sendStatus(204).send("Video Deleted")
 })
 
 
