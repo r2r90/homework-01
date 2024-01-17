@@ -74,7 +74,6 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     if (!title || typeof title !== 'string' || title.trim().length > 40) {
 
         postErrors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
-        console.log(postErrors.errorsMessages)
 
     }
 
@@ -145,11 +144,11 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
             putErrors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
         }
 
-        if (typeof canBeDownloaded !== 'boolean') {
+        if (canBeDownloaded && typeof canBeDownloaded !== 'boolean') {
             putErrors.errorsMessages.push({message: 'Incorrect can be downloaded!', field: 'canBeDownloaded'})
         }
 
-        if (typeof minAgeRestriction !== 'number') {
+        if (minAgeRestriction && typeof minAgeRestriction !== 'number') {
             putErrors.errorsMessages.push({message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction'})
         }
 
@@ -168,6 +167,11 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
             })
         } else {
             foundedVideo.availableResolutions = req.body.availableResolutions
+        }
+
+        if (putErrors.errorsMessages.length) {
+            res.status(400).send(putErrors)
+            return
         }
 
 
