@@ -103,6 +103,15 @@ exports.app.put('/videos/:id', (req, res) => {
     }
     else {
         let { title, author, availableResolutions, canBeDownloaded, minAgeRestriction } = req.body;
+        if (Array.isArray(availableResolutions)) {
+            const validResolutions = availableResolutions.every(r => exports.AvailableResolutions.includes(r));
+            if (!validResolutions) {
+                putErrors.errorsMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
+            }
+        }
+        else {
+            putErrors.errorsMessages.push({ message: 'Available resolutions must be an array', field: 'availableResolutions' });
+        }
         if (!title || typeof title !== 'string' || title.trim().length > 40) {
             putErrors.errorsMessages.push({ message: 'Incorrect title!', field: 'title' });
         }
@@ -115,25 +124,15 @@ exports.app.put('/videos/:id', (req, res) => {
         if (minAgeRestriction && typeof minAgeRestriction !== 'number') {
             putErrors.errorsMessages.push({ message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction' });
         }
-        foundedVideo.title = req.body.title;
-        foundedVideo.author = req.body.author;
-        foundedVideo.canBeDownloaded = req.body.canBeDownloaded;
-        foundedVideo.minAgeRestriction = req.body.minAgeRestriction;
-        if (Array.isArray(availableResolutions)) {
-            availableResolutions.forEach(r => {
-                if (!exports.AvailableResolutions.includes(r)) {
-                    errors.errorsMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
-                    return;
-                }
-            });
-        }
-        else {
-            foundedVideo.availableResolutions = req.body.availableResolutions;
-        }
         if (putErrors.errorsMessages.length) {
             res.status(400).send(putErrors);
             return;
         }
-        res.send(foundedVideo);
+        foundedVideo.title = title;
+        foundedVideo.author = author;
+        foundedVideo.availableResolutions = availableResolutions;
+        foundedVideo.canBeDownloaded = canBeDownloaded;
+        foundedVideo.minAgeRestriction = minAgeRestriction;
+        res.status(204).send(foundedVideo);
     }
 });

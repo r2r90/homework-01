@@ -67,7 +67,6 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     }
 
 
-
     let {title, author, availableResolutions} = req.body
 
 
@@ -134,10 +133,18 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
 
         let {title, author, availableResolutions, canBeDownloaded, minAgeRestriction} = req.body
 
+        if (Array.isArray(availableResolutions)) {
+            const validResolutions = availableResolutions.every(r => AvailableResolutions.includes(r));
+            if (!validResolutions) {
+                putErrors.errorsMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
+            }
+        } else {
+            putErrors.errorsMessages.push({ message: 'Available resolutions must be an array', field: 'availableResolutions' });
+        }
+
 
         if (!title || typeof title !== 'string' || title.trim().length > 40) {
             putErrors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
-
         }
 
         if (!author || typeof author !== 'string' || author.trim().length > 20) {
@@ -153,30 +160,20 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
         }
 
 
-        foundedVideo.title = req.body.title
-        foundedVideo.author = req.body.author
-        foundedVideo.canBeDownloaded = req.body.canBeDownloaded
-        foundedVideo.minAgeRestriction = req.body.minAgeRestriction
-
-        if (Array.isArray(availableResolutions)) {
-            availableResolutions.forEach(r => {
-                if (!AvailableResolutions.includes(r)) {
-                    errors.errorsMessages.push({message: 'Incorrect resolution', field: 'availableResolutions'})
-                    return
-                }
-            })
-        } else {
-            foundedVideo.availableResolutions = req.body.availableResolutions
-        }
 
         if (putErrors.errorsMessages.length) {
             res.status(400).send(putErrors)
             return
         }
 
+        foundedVideo.title = title
+        foundedVideo.author = author
+        foundedVideo.availableResolutions = availableResolutions
+        foundedVideo.canBeDownloaded = canBeDownloaded
+        foundedVideo.minAgeRestriction = minAgeRestriction
 
-        res.send(foundedVideo)
 
+        res.status(204).send(foundedVideo)
     }
 
 
