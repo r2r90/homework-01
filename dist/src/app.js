@@ -110,7 +110,10 @@ exports.app.put('/videos/:id', (req, res) => {
             }
         }
         else {
-            putErrors.errorsMessages.push({ message: 'Available resolutions must be an array', field: 'availableResolutions' });
+            putErrors.errorsMessages.push({
+                message: 'Available resolutions must be an array',
+                field: 'availableResolutions'
+            });
         }
         if (!title || typeof title !== 'string' || title.trim().length > 40) {
             putErrors.errorsMessages.push({ message: 'Incorrect title!', field: 'title' });
@@ -121,7 +124,7 @@ exports.app.put('/videos/:id', (req, res) => {
         if (canBeDownloaded && typeof canBeDownloaded !== 'boolean') {
             putErrors.errorsMessages.push({ message: 'Incorrect can be downloaded!', field: 'canBeDownloaded' });
         }
-        if (minAgeRestriction && typeof minAgeRestriction !== 'number') {
+        if (minAgeRestriction && typeof minAgeRestriction !== 'number' || minAgeRestriction > 18 || minAgeRestriction < 0) {
             putErrors.errorsMessages.push({ message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction' });
         }
         if (putErrors.errorsMessages.length) {

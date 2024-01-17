@@ -136,10 +136,13 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
         if (Array.isArray(availableResolutions)) {
             const validResolutions = availableResolutions.every(r => AvailableResolutions.includes(r));
             if (!validResolutions) {
-                putErrors.errorsMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
+                putErrors.errorsMessages.push({message: 'Incorrect resolution', field: 'availableResolutions'});
             }
         } else {
-            putErrors.errorsMessages.push({ message: 'Available resolutions must be an array', field: 'availableResolutions' });
+            putErrors.errorsMessages.push({
+                message: 'Available resolutions must be an array',
+                field: 'availableResolutions'
+            });
         }
 
 
@@ -155,10 +158,9 @@ app.put('/videos/:id', (req: Request<Param>, res: Response) => {
             putErrors.errorsMessages.push({message: 'Incorrect can be downloaded!', field: 'canBeDownloaded'})
         }
 
-        if (minAgeRestriction && typeof minAgeRestriction !== 'number') {
+        if (minAgeRestriction && typeof minAgeRestriction !== 'number' || minAgeRestriction > 18 || minAgeRestriction < 0) {
             putErrors.errorsMessages.push({message: 'Incorrect minAgeRestriction', field: 'minAgeRestriction'})
         }
-
 
 
         if (putErrors.errorsMessages.length) {
