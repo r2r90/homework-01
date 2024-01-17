@@ -52,20 +52,20 @@ exports.app.delete('/videos/:id', (req, res) => {
 });
 exports.app.post('/videos', (req, res) => {
     const errors = {
-        errorMessages: []
+        errorsMessages: []
     };
     let { title, author, availableResolutions } = req.body;
     if (!title || typeof title !== 'string' || title.trim().length > 40) {
-        errors.errorMessages.push({ message: 'Incorrect title!', field: 'title' });
+        errors.errorsMessages.push({ message: 'Incorrect title!', field: 'title' });
     }
     if (!author || typeof author !== 'string' || author.trim().length > 20) {
-        errors.errorMessages.push({ message: 'Incorrect author!', field: 'author' });
+        errors.errorsMessages.push({ message: 'Incorrect author!', field: 'author' });
     }
     console.log(errors);
     if (Array.isArray(availableResolutions)) {
         availableResolutions.forEach(r => {
             if (!exports.AvailableResolutions.includes(r)) {
-                errors.errorMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
+                errors.errorsMessages.push({ message: 'Incorrect resolution', field: 'availableResolutions' });
                 return;
             }
         });
@@ -73,7 +73,7 @@ exports.app.post('/videos', (req, res) => {
     else {
         availableResolutions = [];
     }
-    if (errors.errorMessages.length) {
+    if (errors.errorsMessages.length) {
         res.status(400).send(errors);
         return;
     }

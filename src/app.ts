@@ -63,7 +63,7 @@ app.delete('/videos/:id', (req: Request<Param>, res: Response) => {
 
 app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     const errors: ErrorType = {
-        errorMessages: []
+        errorsMessages: []
     }
 
     let {title, author, availableResolutions} = req.body
@@ -71,12 +71,12 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
 
 
     if (!title || typeof title !== 'string' || title.trim().length > 40) {
-        errors.errorMessages.push({message: 'Incorrect title!', field: 'title'})
+        errors.errorsMessages.push({message: 'Incorrect title!', field: 'title'})
 
     }
 
     if (!author || typeof author !== 'string' || author.trim().length > 20) {
-        errors.errorMessages.push({message: 'Incorrect author!', field: 'author'})
+        errors.errorsMessages.push({message: 'Incorrect author!', field: 'author'})
     }
 
     console.log(errors)
@@ -84,7 +84,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
     if (Array.isArray(availableResolutions)) {
         availableResolutions.forEach(r => {
             if (!AvailableResolutions.includes(r)) {
-                errors.errorMessages.push({message: 'Incorrect resolution', field: 'availableResolutions'})
+                errors.errorsMessages.push({message: 'Incorrect resolution', field: 'availableResolutions'})
                 return
             }
         })
@@ -92,7 +92,7 @@ app.post('/videos', (req: RequestWithBody<CreateVideoType>, res: Response) => {
         availableResolutions = []
     }
 
-    if (errors.errorMessages.length) {
+    if (errors.errorsMessages.length) {
         res.status(400).send(errors)
         return
     }

@@ -29,5 +29,5 @@ export type ErrorMessageType = {
 }
 
 export type ErrorType = {
-    errorMessages: ErrorMessageType[]
+    errorsMessages: ErrorMessageType[]
 }
